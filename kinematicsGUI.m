@@ -6,7 +6,7 @@ function [flags,points,acc,movquals] = kinematicsGUI(v,trialinfo,options)
 %% options
 
 if ~isfield(options,'crop')
-    options.crop = [1,319,1,239];
+    options.crop = [1,639,1,449];
 end
 if ~isfield(options,'trialFrames')
     options.trialFrames = get(v,'NumberOfFrames');
@@ -194,6 +194,22 @@ clearTraj=uicontrol('style','pushbutton','position',[560 200 120 20],'String','C
             case 31 %up arrow
                 % back10
                 curr_frame = curr_frame-10;
+                setFrame;
+            case 100 % d
+                ms = sort(cat(2,flags{:}));
+                ms = ms - (curr_frame-options.trialFrameInd);
+                ms = min(ms(ms>0));
+                if ~isempty(ms)
+                    curr_frame = curr_frame + ms;
+                end
+                setFrame;
+            case 115 % s
+                ms = sort(cell2mat(flags'));
+                ms = ms - (curr_frame-options.trialFrameInd);
+                ms = max(ms(ms<0));
+                if ~isempty(ms)
+                    curr_frame = curr_frame + ms;
+                end
                 setFrame;
                 
             % frame flags (123456)
