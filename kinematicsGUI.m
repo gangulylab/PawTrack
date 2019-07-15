@@ -1,4 +1,4 @@
-function [flags,points,acc,movquals] = kinematicsGUI(v,trialinfo,options)
+function [flags,points,acc,movquals,scoops] = kinematicsGUI(v,trialinfo,options)
 % GUI to visualize kinematics from video
 % Allows user to modify/add trajectory and time markers
 % If no prior trial info available, set trialinfo to []
@@ -70,6 +70,12 @@ if ~isempty(trialinfo) && isfield(trialinfo,'movQual') && ~isempty(trialinfo.mov
     movquals=trialinfo.movQual;
 else
     movquals=ones(6,1).*-1;
+end
+% scoops
+if ~isempty(trialinfo) && isfield(trialinfo,'scoops') && ~isempty(trialinfo.acc)
+    scoops=trialinfo.scoops;
+else
+    scoops=0;
 end
 %% create GUI
 
@@ -150,6 +156,10 @@ clearBut=uicontrol('style','pushbutton','position',[210 20 80 20],'String','Clea
 %%% accuracy %%%
 uicontrol('style','text','string','Accuracy','position',[560 160 60 20],'FontSize',10);
 accVal = uicontrol('style','text','string',num2str(acc),'position',[640 160 30 20],'FontSize',10);
+
+%%% scoops %%%
+uicontrol('style','text','string','Scoop','position',[560 140 60 20],'FontSize',10);
+scoopVal = uicontrol('style','text','string',num2str(scoops),'position',[640 140 30 20],'FontSize',10);
 
 %%% movement quality analysis %%%
 uicontrol('style','text','string','(Q) Digits open','position',[360 160 100 20],'FontSize',10,'HorizontalAlignment','left');
@@ -309,6 +319,15 @@ clearTraj=uicontrol('style','pushbutton','position',[560 200 120 20],'String','C
                     acc=0;
                 end
                 set(accVal,'string',num2str(acc));
+                
+            % c for scoop
+            case 99                   
+                if scoops==0
+                    scoops=1;
+                elseif scoops==1
+                    scoops=0;
+                end
+                set(scoopVal,'string',num2str(scoops));
                 
             % exit
             case 97 %a
